@@ -1,0 +1,96 @@
+---
+- name: Configure Kubernetes Node
+  hosts: k8s_nodes
+  become: yes
+  
+  tasks:
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+        cache_valid_time: 3600
+
+    - name: Upgrade all packages
+      apt:
+        upgrade: dist
+
+    - name: Install required packages
+      apt:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - software-properties-common
+          - snapd
+        state: present
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Start and enable Docker service
+      systemd:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Add ubuntu user to docker group
+      user:
+        name: ubuntu
+        groups: docker
+        append: yes
+
+    - name: Install microk8s via snap
+      snap:
+        name: microk8s
+        classic: yes
+        channel: 1.28/stable
+
+    - name: Add ubuntu user to microk8s group
+      user:
+        name: ubuntu
+        groups: microk8s
+        append: yes
+
+    - name: Wait for microk8s to be ready
+      command: microk8s status --wait-ready
+      changed_when: false
+
+    - name: Enable microk8s addons
+      command: microk8s enable dns storage ingress
+      changed_when: false
+
+    - name: Create .kube directory
+      file:
+        path: /home/ubuntu/.kube
+        state: directory
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'
+
+    - name: Generate kubeconfig
+      shell: microk8s config > /home/ubuntu/.kube/config
+      args:
+        creates: /home/ubuntu/.kube/config
+
+    - name: Set kubeconfig permissions
+      file:
+        path: /home/ubuntu/.kube/config
+        owner: ubuntu
+        group: ubuntu
+        mode: '0600'
+
+    - name: Create kubectl alias
+      lineinfile:
+        path: /home/ubuntu/.bashrc
+        line: 'alias kubectl="microk8s kubectl"'
+        create: yes
+
+    - name: Display microk8s status
+      command: microk8s status
+      register: microk8s_status
+      changed_when: false
+
+    - name: Show microk8s status
+      debug:
+        var: microk8s_status.stdout_lines
