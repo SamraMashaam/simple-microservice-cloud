@@ -1,7 +1,6 @@
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
-
 module.exports = {
     mode: 'development',
     entry: './src/script.js',
@@ -16,7 +15,6 @@ module.exports = {
         new webpack.ProvidePlugin({
             $: 'jquery',
             jQuery: 'jquery'
-        }),
-        new webpack.EnvironmentPlugin(['API_GATEWAY']),
+        })
     ]
 }

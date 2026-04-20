@@ -1,5 +1,4 @@
-var api = process.env.API_GATEWAY // get the API Gateway from the environment
-
+var api = "http://52.1.139.2:30003" // API Gateway URL
 $(document).ready(function() {
     $("#btn").click(function() {
         $.ajax({
@@ -8,9 +7,9 @@ $(document).ready(function() {
             dataType: "json",
             timeout: 3000,
             success: function(data) {
-                $("#quote").removeClass('is-danger') 
+                $("#quote").removeClass('is-danger')
                 $("#quote").addClass('is-link')
-                $( "#quote" ).html(data.quote.quote + '</br><b>'+ data.quote.by +'</b>'); 
+                $( "#quote" ).html(data.quote.quote + '</br><b>'+ data.quote.by +'</b>');
             },
             error: function(xmlhttprequest, textstatus, message) {
                 $("#quote").removeClass('is-link')
