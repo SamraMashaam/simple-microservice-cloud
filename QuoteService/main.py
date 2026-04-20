@@ -36,4 +36,4 @@ def page_not_found(e):
 if __name__ == '__main__':
     loadQuotes() # load quotes 
     app.run(host='0.0.0.0', port=5000, debug=True) # run application
-    
+    # Updated for CI/CD test
