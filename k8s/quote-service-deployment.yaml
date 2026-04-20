@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: quote-service
-        image: armasm/quote-service:v1.0
+        image: armasm/quote-service:3596103
         ports:
         - containerPort: 5000
         resources:
