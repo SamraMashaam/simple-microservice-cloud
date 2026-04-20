@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: armasm/frontend-app:3596103
+        image: armasm/frontend-app:f8e3a59
         ports:
         - containerPort: 80
         resources:

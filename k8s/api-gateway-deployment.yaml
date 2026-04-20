@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: api-gateway
-        image: armasm/api-gateway:3596103
+        image: armasm/api-gateway:f8e3a59
         ports:
         - containerPort: 3000
         env:
